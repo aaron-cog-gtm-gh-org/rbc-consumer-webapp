@@ -1,0 +1,76 @@
+<aside class="card" aria-labelledby="quick-transfer-heading">
+  <h2 class="card__title" id="quick-transfer-heading">Quick Payments &amp; Transfers</h2>
+
+  <form class="card__body" (submit)="submit($event)">
+    <label class="field">
+      <span class="field__label">From</span>
+      <select (change)="onFromChange($event)">
+        @for (account of accounts(); track account.id) {
+          <option [value]="account.id" [selected]="account.id === form().fromAccountId">
+            {{ account.name }}
+          </option>
+        }
+      </select>
+    </label>
+
+    <label class="field">
+      <span class="field__label">To</span>
+      <select (change)="onToChange($event)">
+        @for (account of accounts(); track account.id) {
+          <option [value]="account.id" [selected]="account.id === form().toAccountId">
+            {{ account.name }}
+          </option>
+        }
+      </select>
+    </label>
+
+    <div class="field">
+      <span class="field__label" id="amount-label">Amount</span>
+      <div class="field__amount">
+        <input
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="0.00"
+          aria-labelledby="amount-label"
+          [value]="form().amount ?? ''"
+          (input)="onAmountChange($event)"
+        />
+        <select aria-label="Currency" (change)="onCurrencyChange($event)">
+          @for (currency of currencies; track currency) {
+            <option [value]="currency" [selected]="currency === form().currency">
+              {{ currency }}
+            </option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <a class="card__rewards" href="#">Pay with RBC Rewards Points</a>
+
+    @if (error()) {
+      <p class="alert alert--error" role="alert">{{ error() }}</p>
+    }
+
+    @if (confirmation()) {
+      <div class="alert alert--success" role="status">
+        <p>{{ confirmation() }}</p>
+        <button type="button" class="alert__dismiss" (click)="dismissConfirmation()">
+          Dismiss
+        </button>
+      </div>
+    }
+
+    <button type="submit" class="submit" [disabled]="submitting()">
+      {{ submitting() ? 'Submitting…' : 'Submit' }}
+    </button>
+  </form>
+
+  <ul class="card__links">
+    @for (link of quickLinks; track link) {
+      <li>
+        <a href="#">{{ link }}</a>
+      </li>
+    }
+  </ul>
+</aside>

@@ -1,0 +1,20 @@
+<nav class="nav" aria-label="Primary">
+  <div class="nav__inner">
+    <ul class="nav__tabs">
+      @for (tab of tabs; track tab) {
+        <li>
+          <button
+            type="button"
+            class="nav__tab"
+            [class.nav__tab--active]="tab === activeTab()"
+            [attr.aria-current]="tab === activeTab() ? 'page' : null"
+            (click)="selectTab(tab)"
+          >
+            {{ tab }}
+          </button>
+        </li>
+      }
+    </ul>
+    <p class="nav__date">{{ statementDate() }}</p>
+  </div>
+</nav>

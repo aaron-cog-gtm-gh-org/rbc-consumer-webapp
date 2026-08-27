@@ -1,0 +1,49 @@
+@use '../../styles/section' as section;
+
+@include section.section-card;
+
+.options {
+  position: relative;
+  flex: 0 0 auto;
+
+  &__trigger {
+    background: var(--rbc-surface);
+    border: 1px solid var(--rbc-border);
+    border-radius: 3px;
+    color: var(--rbc-link);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 10px;
+
+    &:hover {
+      border-color: var(--rbc-blue);
+    }
+  }
+
+  &__list {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 4px);
+    z-index: 10;
+    min-width: 210px;
+    margin: 0;
+    padding: 6px 0;
+    list-style: none;
+    background: var(--rbc-surface);
+    border: 1px solid var(--rbc-border);
+    border-radius: 3px;
+    box-shadow: 0 6px 16px rgb(0 0 0 / 12%);
+
+    a {
+      display: block;
+      padding: 8px 14px;
+      font-size: 13px;
+
+      &:hover {
+        background: var(--rbc-band);
+        text-decoration: none;
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+<section class="welcome" aria-labelledby="welcome-heading">
+  <div class="welcome__top">
+    <h1 class="welcome__heading" id="welcome-heading">Welcome, {{ firstName() }}</h1>
+    <a class="welcome__switch" href="#">Go to Business Accounts</a>
+  </div>
+
+  <div class="welcome__bottom">
+    <ul class="shortcuts">
+      @for (shortcut of shortcuts; track shortcut.label) {
+        <li>
+          <a class="shortcut" href="#">
+            <span class="shortcut__icon">
+              <app-icon [name]="shortcut.icon" />
+              @if (shortcut.badge && unreadMessages() > 0) {
+                <span class="shortcut__badge">{{ unreadMessages() }}</span>
+              }
+            </span>
+            <span class="shortcut__label">{{ shortcut.label }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+
+    <form class="search" (submit)="$event.preventDefault()" role="search">
+      <label class="visually-hidden" for="site-search">Search RBC Online Banking</label>
+      <input
+        id="site-search"
+        type="search"
+        placeholder="Search"
+        [value]="searchQuery()"
+        (input)="onSearchInput($event)"
+      />
+      <button type="submit" aria-label="Search">
+        <app-icon name="search" />
+      </button>
+    </form>
+  </div>
+</section>

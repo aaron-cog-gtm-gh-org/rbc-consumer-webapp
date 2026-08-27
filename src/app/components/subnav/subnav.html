@@ -1,0 +1,14 @@
+<div class="subnav">
+  <nav class="subnav__inner" aria-label="Secondary">
+    @for (tab of tabs; track tab) {
+      <button
+        type="button"
+        class="subnav__tab"
+        [class.subnav__tab--active]="tab === activeTab()"
+        (click)="selectTab(tab)"
+      >
+        {{ tab }}
+      </button>
+    }
+  </nav>
+</div>

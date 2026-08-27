@@ -1,0 +1,47 @@
+<header class="header">
+  <div class="header__inner">
+    <a class="logo" href="#" aria-label="RBC Royal Bank home">
+      <span class="logo__mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" role="img" focusable="false">
+          <rect width="40" height="40" rx="3" fill="#005DAA" />
+          <path d="M20 8l9 6v12l-9 6-9-6V14z" fill="#FEDF01" />
+          <path
+            d="M20 14c2.6 0 4.6 1.6 4.6 4 0 3-2.6 4.4-4.6 6-2-1.6-4.6-3-4.6-6 0-2.4 2-4 4.6-4z"
+            fill="#005DAA"
+          />
+        </svg>
+      </span>
+      <span class="logo__text">
+        <strong>RBC</strong>
+        <em>Royal Bank</em>
+      </span>
+    </a>
+
+    <div class="header__actions">
+      <div class="user-menu">
+        <button
+          type="button"
+          class="user-menu__trigger"
+          [attr.aria-expanded]="userMenuOpen()"
+          aria-haspopup="true"
+          (click)="toggleUserMenu()"
+        >
+          {{ userName() }}
+          <span class="caret" aria-hidden="true">▾</span>
+        </button>
+
+        @if (userMenuOpen()) {
+          <ul class="user-menu__list">
+            @for (item of userMenuItems; track item) {
+              <li>
+                <a href="#">{{ item }}</a>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+
+      <button type="button" class="sign-out">Sign Out</button>
+    </div>
+  </div>
+</header>
