@@ -1,6 +1,6 @@
 import { Account } from '../accounts/accounts.models';
 import { initialAccountsState } from '../accounts/accounts.reducer';
-import { parseAmount, validateTransfer } from './transfer.effects';
+import { parseAmount, validateTransfer } from './transfer.validation';
 
 const accounts: Account[] = initialAccountsState.accounts;
 
