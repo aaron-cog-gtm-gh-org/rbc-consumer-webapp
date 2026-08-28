@@ -7,7 +7,9 @@
   @for (account of accounts(); track account.id) {
     <div class="row">
       <div class="row__main">
-        <a class="row__name" href="#">{{ account.name }}</a>
+        <a class="row__name" href="#" (click)="$event.preventDefault(); openDetails(account.id)">{{
+          account.name
+        }}</a>
         <div class="row__number">{{ account.number }}</div>
       </div>
       <div class="row__balance">{{ account.balance | currency: 'CAD' : 'symbol-narrow' }}</div>
@@ -24,7 +26,13 @@
           <ul class="options__list">
             @for (item of optionsMenuItems; track item) {
               <li>
-                <a href="#">{{ item }}</a>
+                @if (item === viewDetailsItem) {
+                  <a href="#" (click)="$event.preventDefault(); openDetails(account.id)">{{
+                    item
+                  }}</a>
+                } @else {
+                  <a href="#">{{ item }}</a>
+                }
               </li>
             }
           </ul>
