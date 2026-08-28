@@ -1,0 +1,29 @@
+.subnav {
+  background: var(--rbc-surface);
+  border-bottom: 1px solid var(--rbc-border);
+}
+
+.subnav__inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.subnav__tab {
+  background: none;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  color: var(--rbc-link);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 12px 2px 9px;
+
+  &--active {
+    border-bottom-color: var(--rbc-blue);
+    color: var(--rbc-blue);
+  }
+}

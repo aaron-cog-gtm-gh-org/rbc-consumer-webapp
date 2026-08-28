@@ -1,0 +1,44 @@
+<section class="section" aria-labelledby="bank-accounts-heading">
+  <div class="section__head">
+    <h2 class="section__title" id="bank-accounts-heading">Bank Accounts</h2>
+    <a class="section__head-link" href="#">Set Up Account Alerts</a>
+  </div>
+
+  @for (account of accounts(); track account.id) {
+    <div class="row">
+      <div class="row__main">
+        <a class="row__name" href="#">{{ account.name }}</a>
+        <div class="row__number">{{ account.number }}</div>
+      </div>
+      <div class="row__balance">{{ account.balance | currency: 'CAD' : 'symbol-narrow' }}</div>
+      <div class="options">
+        <button
+          type="button"
+          class="options__trigger"
+          [attr.aria-expanded]="openMenuId() === account.id"
+          (click)="toggleMenu(account.id)"
+        >
+          Options <span aria-hidden="true">▾</span>
+        </button>
+        @if (openMenuId() === account.id) {
+          <ul class="options__list">
+            @for (item of optionsMenuItems; track item) {
+              <li>
+                <a href="#">{{ item }}</a>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    </div>
+  }
+
+  <div class="section__footer">
+    <button type="button" class="add-button">+ Open a Bank Account</button>
+  </div>
+
+  <div class="total">
+    <span>Total (CAD)</span>
+    <span>{{ total() | currency: 'CAD' : 'symbol-narrow' }}</span>
+  </div>
+</section>

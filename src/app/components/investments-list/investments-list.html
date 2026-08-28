@@ -1,0 +1,26 @@
+<section class="section" aria-labelledby="investments-heading">
+  <div class="section__head">
+    <h2 class="section__title" id="investments-heading">Investments</h2>
+    <a class="section__head-link" href="#">Plan with MyAdvisor</a>
+  </div>
+
+  @for (investment of investments(); track investment.id) {
+    <div class="row">
+      <div class="row__main">
+        <a class="row__name" href="#">{{ investment.name }}</a>
+        <div class="row__number">{{ investment.number }}</div>
+      </div>
+      <div class="row__balance">{{ investment.balance | currency: 'CAD' : 'symbol-narrow' }}</div>
+    </div>
+  }
+
+  <div class="section__footer">
+    <button type="button" class="add-button">+ Purchase an Investment</button>
+    <a href="#">RBC Direct Investing Practice Account</a>
+  </div>
+
+  <div class="total">
+    <span>Total (CAD)</span>
+    <span>{{ total() | currency: 'CAD' : 'symbol-narrow' }}</span>
+  </div>
+</section>
