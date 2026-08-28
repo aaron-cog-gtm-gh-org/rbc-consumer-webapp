@@ -28,12 +28,11 @@
       <span class="field__label" id="amount-label">Amount</span>
       <div class="field__amount">
         <input
-          type="number"
-          min="0"
-          step="0.01"
+          type="text"
+          inputmode="decimal"
           placeholder="0.00"
           aria-labelledby="amount-label"
-          [value]="form().amount ?? ''"
+          [value]="form().amount"
           (input)="onAmountChange($event)"
         />
         <select aria-label="Currency" (change)="onCurrencyChange($event)">

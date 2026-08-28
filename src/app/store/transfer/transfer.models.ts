@@ -1,7 +1,7 @@
 export interface TransferState {
   fromAccountId: string;
   toAccountId: string;
-  amount: number | null;
+  amount: string;
   currency: string;
   submitting: boolean;
   confirmation: string | null;
