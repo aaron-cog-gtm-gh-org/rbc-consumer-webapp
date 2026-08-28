@@ -13,7 +13,7 @@ export const transferFeatureKey = 'transfer';
 export const initialTransferState: TransferState = {
   fromAccountId: 'day-to-day',
   toAccountId: 'esavings',
-  amount: null,
+  amount: '',
   currency: 'CAD',
   submitting: false,
   confirmation: null,
@@ -36,7 +36,7 @@ export const transferReducer = createReducer(
   on(transferCompleted, (state, { confirmation }) => ({
     ...state,
     submitting: false,
-    amount: null,
+    amount: '',
     confirmation,
     error: null,
   })),

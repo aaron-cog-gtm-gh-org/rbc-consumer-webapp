@@ -5,7 +5,7 @@ export const transferFormChanged = createAction(
   props<{
     fromAccountId?: string;
     toAccountId?: string;
-    amount?: number | null;
+    amount?: string;
     currency?: string;
   }>(),
 );

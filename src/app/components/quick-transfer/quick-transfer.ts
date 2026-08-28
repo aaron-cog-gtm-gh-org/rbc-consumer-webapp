@@ -34,7 +34,7 @@ export class QuickTransfer {
     initialValue: [],
   });
   protected readonly form = toSignal(this.store.select(selectTransferForm), {
-    initialValue: { fromAccountId: '', toAccountId: '', amount: null, currency: 'CAD' },
+    initialValue: { fromAccountId: '', toAccountId: '', amount: '', currency: 'CAD' },
   });
   protected readonly submitting = toSignal(this.store.select(selectTransferSubmitting), {
     initialValue: false,
@@ -65,9 +65,7 @@ export class QuickTransfer {
   }
 
   protected onAmountChange(event: Event): void {
-    const raw = (event.target as HTMLInputElement).value;
-    const amount = raw === '' ? null : Number(raw);
-    this.store.dispatch(transferFormChanged({ amount }));
+    this.store.dispatch(transferFormChanged({ amount: (event.target as HTMLInputElement).value }));
   }
 
   protected submit(event: Event): void {

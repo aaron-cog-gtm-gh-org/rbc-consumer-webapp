@@ -3,33 +3,13 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { concatMap, delay, from, of, withLatestFrom } from 'rxjs';
 import { accountsTransferApplied } from '../accounts/accounts.actions';
-import { Account } from '../accounts/accounts.models';
 import { selectAllAccounts } from '../accounts/accounts.selectors';
 import { transferCompleted, transferRejected, transferSubmitted } from './transfer.actions';
 import { selectTransferForm } from './transfer.selectors';
+import { parseAmount, validateTransfer } from './transfer.validation';
 
 const formatCurrency = (amount: number, currency: string): string =>
   `${amount.toLocaleString('en-CA', { style: 'currency', currency })}`;
-
-const validate = (
-  form: { fromAccountId: string; toAccountId: string; amount: number | null },
-  accounts: Account[],
-): string | null => {
-  if (!form.amount || form.amount <= 0) {
-    return 'Enter an amount greater than $0.00.';
-  }
-  if (form.fromAccountId === form.toAccountId) {
-    return 'Choose two different accounts.';
-  }
-  const from = accounts.find((account) => account.id === form.fromAccountId);
-  if (!from) {
-    return 'Choose an account to transfer from.';
-  }
-  if (from.balance < form.amount) {
-    return 'Insufficient funds in the selected account.';
-  }
-  return null;
-};
 
 export const submitTransfer$ = createEffect(
   (actions$ = inject(Actions), store = inject(Store)) =>
@@ -37,11 +17,11 @@ export const submitTransfer$ = createEffect(
       ofType(transferSubmitted),
       withLatestFrom(store.select(selectTransferForm), store.select(selectAllAccounts)),
       concatMap(([, form, accounts]) => {
-        const error = validate(form, accounts);
+        const error = validateTransfer(form, accounts);
         if (error) {
           return of(transferRejected({ error }));
         }
-        const amount = form.amount as number;
+        const amount = parseAmount(form.amount) as number;
         const fromAccount = accounts.find((account) => account.id === form.fromAccountId);
         const toAccount = accounts.find((account) => account.id === form.toAccountId);
         const confirmation =
