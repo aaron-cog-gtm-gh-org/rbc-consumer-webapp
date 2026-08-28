@@ -5,9 +5,14 @@
 <div class="page">
   <div class="page__grid">
     <main class="page__main">
-      <app-welcome-bar />
-      <app-account-list />
-      <app-investments-list />
+      @if (selectedAccountId()) {
+        <app-account-detail />
+        <app-transaction-history />
+      } @else {
+        <app-welcome-bar />
+        <app-account-list />
+        <app-investments-list />
+      }
     </main>
 
     <div class="page__sidebar">

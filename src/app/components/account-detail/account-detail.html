@@ -1,0 +1,23 @@
+@if (account(); as account) {
+  <section class="section" aria-labelledby="account-detail-heading">
+    <div class="section__head">
+      <h2 class="section__title" id="account-detail-heading">Account Details</h2>
+      <button type="button" class="back-button" (click)="closeDetails()">
+        <span aria-hidden="true">‹</span> Back to Accounts Summary
+      </button>
+    </div>
+
+    <div class="row">
+      <div class="row__main">
+        <div class="row__name">{{ account.name }}</div>
+        <div class="row__number">{{ account.number }}</div>
+      </div>
+      <div class="row__balance">{{ account.balance | currency: 'CAD' : 'symbol-narrow' }}</div>
+    </div>
+
+    <div class="total">
+      <span>Current Balance (CAD)</span>
+      <span>{{ account.balance | currency: 'CAD' : 'symbol-narrow' }}</span>
+    </div>
+  </section>
+}

@@ -1,0 +1,18 @@
+@use '../../styles/section' as section;
+
+@include section.section-card;
+
+.back-button {
+  background: none;
+  border: 1px solid var(--rbc-border);
+  border-radius: 3px;
+  color: var(--rbc-link);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 10px;
+
+  &:hover {
+    border-color: var(--rbc-blue);
+  }
+}

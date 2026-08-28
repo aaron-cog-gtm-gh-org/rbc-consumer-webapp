@@ -6,6 +6,7 @@ import {
   selectInvestmentAccounts,
   selectInvestmentsTotal,
 } from '../../store/accounts/accounts.selectors';
+import { accountDetailsOpened } from '../../store/ui/ui.actions';
 
 @Component({
   selector: 'app-investments-list',
@@ -22,4 +23,8 @@ export class InvestmentsList {
   protected readonly total = toSignal(this.store.select(selectInvestmentsTotal), {
     initialValue: 0,
   });
+
+  protected openDetails(accountId: string): void {
+    this.store.dispatch(accountDetailsOpened({ accountId }));
+  }
 }

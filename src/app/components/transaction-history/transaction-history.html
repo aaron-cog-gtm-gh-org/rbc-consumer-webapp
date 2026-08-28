@@ -1,0 +1,36 @@
+<section class="section" aria-labelledby="transaction-history-heading">
+  <div class="section__head">
+    <h2 class="section__title" id="transaction-history-heading">Transaction History</h2>
+    <a class="section__head-link" href="#">Download Transactions</a>
+  </div>
+
+  @if (transactions().length) {
+    <table class="transactions">
+      <thead>
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Description</th>
+          <th scope="col" class="transactions__amount">Amount</th>
+          <th scope="col" class="transactions__amount">Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (transaction of transactions(); track transaction.id) {
+          <tr>
+            <td class="transactions__date">{{ transaction.date }}</td>
+            <td>{{ transaction.description }}</td>
+            <td class="transactions__amount transactions__amount--{{ transaction.type }}">
+              {{ transaction.type === 'debit' ? '-' : '' }}
+              {{ transaction.amount | currency: 'CAD' : 'symbol-narrow' }}
+            </td>
+            <td class="transactions__amount">
+              {{ transaction.balance | currency: 'CAD' : 'symbol-narrow' }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <p class="transactions__empty">No transactions to display for this account.</p>
+  }
+</section>

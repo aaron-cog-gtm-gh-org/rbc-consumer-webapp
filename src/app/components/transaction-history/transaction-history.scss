@@ -1,0 +1,45 @@
+@use '../../styles/section' as section;
+
+@include section.section-card;
+
+.transactions {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th,
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--rbc-border);
+    text-align: left;
+  }
+
+  th {
+    background: #fafbfc;
+    color: var(--rbc-muted);
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+
+  tbody tr:hover {
+    background: #fafbfc;
+  }
+
+  &__date {
+    white-space: nowrap;
+  }
+
+  &__amount {
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  &__amount--credit {
+    color: #1a7f37;
+  }
+
+  &__empty {
+    color: var(--rbc-muted);
+    padding: 16px;
+  }
+}
