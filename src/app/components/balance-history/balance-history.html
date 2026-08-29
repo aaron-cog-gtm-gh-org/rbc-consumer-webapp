@@ -1,0 +1,64 @@
+@if (account(); as account) {
+  <div class="overlay" role="dialog" aria-modal="true" aria-labelledby="balance-history-title">
+    <div class="modal">
+      <div class="modal__head">
+        <div>
+          <h2 class="modal__title" id="balance-history-title">{{ account.name }}</h2>
+          <div class="modal__number">{{ account.number }}</div>
+        </div>
+        <button
+          type="button"
+          class="modal__close"
+          aria-label="Close balance history"
+          (click)="close()"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="modal__body">
+        @if (chartPoints().length > 0) {
+          <svg
+            class="chart"
+            [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight"
+            role="img"
+            aria-label="Balance over time"
+          >
+            <polyline class="chart__line" [attr.points]="linePoints()" />
+            @for (item of chartPoints(); track item.point.date) {
+              <circle class="chart__dot" [attr.cx]="item.x" [attr.cy]="item.y" r="3" />
+            }
+          </svg>
+        } @else {
+          <p class="empty">No balance history available for this account.</p>
+        }
+
+        <table class="history">
+          <caption class="history__caption">
+            Balance history
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (point of history(); track point.date) {
+              <tr>
+                <td>{{ point.date }}</td>
+                <td class="history__balance">
+                  {{ point.balance | currency: 'CAD' : 'symbol-narrow' }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal__footer">
+        <button type="button" class="modal__button" (click)="close()">Close</button>
+      </div>
+    </div>
+  </div>
+}
