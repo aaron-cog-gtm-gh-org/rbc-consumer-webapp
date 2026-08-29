@@ -35,7 +35,8 @@
     border-radius: 3px;
     box-shadow: 0 6px 16px rgb(0 0 0 / 12%);
 
-    a {
+    a,
+    button {
       display: block;
       padding: 8px 14px;
       font-size: 13px;
@@ -44,6 +45,16 @@
         background: var(--rbc-band);
         text-decoration: none;
       }
+    }
+
+    button {
+      background: none;
+      border: 0;
+      color: var(--rbc-link);
+      cursor: pointer;
+      font-family: inherit;
+      text-align: left;
+      width: 100%;
     }
   }
 }
