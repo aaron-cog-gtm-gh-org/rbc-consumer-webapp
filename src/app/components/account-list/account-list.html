@@ -24,7 +24,11 @@
           <ul class="options__list">
             @for (item of optionsMenuItems; track item) {
               <li>
-                <a href="#">{{ item }}</a>
+                @if (item === 'View Balance History') {
+                  <button type="button" (click)="openBalanceHistory(account.id)">{{ item }}</button>
+                } @else {
+                  <a href="#">{{ item }}</a>
+                }
               </li>
             }
           </ul>
