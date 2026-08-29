@@ -1,0 +1,87 @@
+@if (account(); as selected) {
+  <div class="history__backdrop" (click)="close()"></div>
+  <div
+    class="history"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="account-history-title"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="history__head">
+      <div>
+        <h2 class="history__title" id="account-history-title">{{ selected.name }}</h2>
+        <div class="history__number">{{ selected.number }}</div>
+      </div>
+      <button
+        type="button"
+        class="history__close"
+        aria-label="Close account history"
+        (click)="close()"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="history__body">
+      <div class="history__summary">
+        <span class="history__summary-label">Current Balance</span>
+        <span class="history__summary-value">
+          {{ selected.balance | currency: 'CAD' : 'symbol-narrow' }}
+        </span>
+      </div>
+
+      @if (chart(); as chartData) {
+        <figure class="history__chart">
+          <figcaption>Balance over time</figcaption>
+          <svg
+            [attr.viewBox]="'0 0 ' + chartData.width + ' ' + chartData.height"
+            preserveAspectRatio="none"
+            role="img"
+            aria-label="Line chart of month-end balances"
+          >
+            <polygon class="history__chart-area" [attr.points]="chartData.area" />
+            <polyline class="history__chart-line" [attr.points]="chartData.line" />
+            @for (point of chartData.points; track point.date) {
+              <circle
+                class="history__chart-dot"
+                [attr.cx]="point.x"
+                [attr.cy]="point.y"
+                r="4"
+              ></circle>
+            }
+          </svg>
+          <div class="history__chart-scale">
+            <span>{{ chartData.min | currency: 'CAD' : 'symbol-narrow' }}</span>
+            <span>{{ chartData.max | currency: 'CAD' : 'symbol-narrow' }}</span>
+          </div>
+        </figure>
+      }
+
+      @if (history().length) {
+        <div class="history__table-wrap">
+          <table class="history__table">
+            <caption>
+              Month-end balances
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (point of history(); track point.date) {
+                <tr>
+                  <td>{{ point.date | date: 'MMM d, y' : 'UTC' }}</td>
+                  <td>{{ point.balance | currency: 'CAD' : 'symbol-narrow' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <p class="history__empty">No balance history is available for this account.</p>
+      }
+    </div>
+  </div>
+}
