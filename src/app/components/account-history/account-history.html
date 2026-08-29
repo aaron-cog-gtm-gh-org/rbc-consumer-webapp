@@ -1,0 +1,100 @@
+@if (account(); as account) {
+  <div class="history-overlay" (click)="close()">
+    <div
+      class="history"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="account-history-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="history__head">
+        <div>
+          <h2 class="history__title" id="account-history-title">{{ account.name }}</h2>
+          <div class="history__number">{{ account.number }}</div>
+        </div>
+        <button
+          type="button"
+          class="history__close"
+          aria-label="Close account history"
+          (click)="close()"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div class="history__summary">
+        <div class="history__stat">
+          <span class="history__stat-label">Current balance</span>
+          <span class="history__stat-value">
+            {{ account.balance | currency: 'CAD' : 'symbol-narrow' }}
+          </span>
+        </div>
+        <div class="history__stat">
+          <span class="history__stat-label">12-month high</span>
+          <span class="history__stat-value">
+            {{ highBalance() | currency: 'CAD' : 'symbol-narrow' }}
+          </span>
+        </div>
+        <div class="history__stat">
+          <span class="history__stat-label">12-month low</span>
+          <span class="history__stat-value">
+            {{ lowBalance() | currency: 'CAD' : 'symbol-narrow' }}
+          </span>
+        </div>
+      </div>
+
+      @if (points().length > 0) {
+        <figure class="chart">
+          <figcaption class="chart__caption">Balance over time</figcaption>
+          <svg
+            class="chart__svg"
+            [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight"
+            role="img"
+            aria-label="Line chart of account balance over time"
+          >
+            <path class="chart__area" [attr.d]="areaPath()" />
+            <path class="chart__line" [attr.d]="linePath()" />
+            @for (point of points(); track point.date) {
+              <circle class="chart__dot" [attr.cx]="point.x" [attr.cy]="point.y" r="4">
+                <title>
+                  {{ point.date | date: 'MMM y' }}:
+                  {{ point.balance | currency: 'CAD' : 'symbol-narrow' }}
+                </title>
+              </circle>
+            }
+          </svg>
+          <div class="chart__axis">
+            @for (point of points(); track point.date) {
+              <span class="chart__axis-label">{{ point.date | date: 'MMM' }}</span>
+            }
+          </div>
+        </figure>
+
+        <div class="history__table-wrap">
+          <table class="history__table">
+            <caption class="visually-hidden">
+              Monthly balances for
+              {{
+                account.name
+              }}
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Month</th>
+                <th scope="col">Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (point of points(); track point.date) {
+                <tr>
+                  <td>{{ point.date | date: 'MMM d, y' }}</td>
+                  <td>{{ point.balance | currency: 'CAD' : 'symbol-narrow' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </div>
+}
