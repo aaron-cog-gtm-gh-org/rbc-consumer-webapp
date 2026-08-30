@@ -1,0 +1,113 @@
+@if (account(); as account) {
+  <div class="history-overlay" (click)="close()">
+    <div
+      class="history"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="account-history-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="history__head">
+        <div class="history__heading">
+          <h2 class="history__title" id="account-history-title">{{ account.name }}</h2>
+          <div class="history__number">{{ account.number }}</div>
+        </div>
+        <button
+          type="button"
+          class="history__close"
+          aria-label="Close account history"
+          (click)="close()"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div class="history__body">
+        <div class="history__summary">
+          <div class="history__stat">
+            <span class="history__stat-label">Current balance</span>
+            <span class="history__stat-value">
+              {{ account.balance | currency: 'CAD' : 'symbol-narrow' }}
+            </span>
+          </div>
+          <div class="history__stat">
+            <span class="history__stat-label">Change over period</span>
+            <span
+              class="history__stat-value"
+              [class.history__stat-value--positive]="changeAmount() >= 0"
+            >
+              {{ changeAmount() | currency: 'CAD' : 'symbol-narrow' }}
+            </span>
+          </div>
+        </div>
+
+        @if (chartPoints().length > 0) {
+          <figure class="history__chart">
+            <figcaption class="history__chart-caption">Balance over time</figcaption>
+            <svg
+              class="history__svg"
+              [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight"
+              preserveAspectRatio="xMidYMid meet"
+              role="img"
+              aria-label="Line chart of account balance over time"
+            >
+              <polygon class="history__area" [attr.points]="areaPath()" />
+              <polyline class="history__line" [attr.points]="linePath()" />
+              @for (chartPoint of chartPoints(); track chartPoint.point.date) {
+                <circle
+                  class="history__dot"
+                  [attr.cx]="chartPoint.x"
+                  [attr.cy]="chartPoint.y"
+                  r="3.5"
+                />
+                @if ($index % 2 === 0 || $last) {
+                  <text
+                    class="history__axis-label"
+                    [attr.x]="chartPoint.x"
+                    [attr.y]="chartHeight - 6"
+                    text-anchor="middle"
+                  >
+                    {{ chartPoint.label }}
+                  </text>
+                }
+              }
+            </svg>
+          </figure>
+
+          <div class="history__table-wrap">
+            <table class="history__table">
+              <caption class="visually-hidden">
+                Balance history for
+                {{
+                  account.name
+                }}
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (point of history(); track point.date) {
+                  <tr>
+                    <td>{{ point.date }}</td>
+                    <td class="history__table-balance">
+                      {{ point.balance | currency: 'CAD' : 'symbol-narrow' }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <p class="history__empty">No balance history is available for this account.</p>
+        }
+      </div>
+
+      <div class="history__footer">
+        <button type="button" class="history__done" (click)="close()">Close</button>
+      </div>
+    </div>
+  </div>
+}

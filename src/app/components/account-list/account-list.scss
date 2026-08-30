@@ -35,7 +35,8 @@
     border-radius: 3px;
     box-shadow: 0 6px 16px rgb(0 0 0 / 12%);
 
-    a {
+    a,
+    button {
       display: block;
       padding: 8px 14px;
       font-size: 13px;
@@ -44,6 +45,25 @@
         background: var(--rbc-band);
         text-decoration: none;
       }
+    }
+
+    button {
+      width: 100%;
+      background: none;
+      border: 0;
+      color: var(--rbc-link);
+      cursor: pointer;
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 600px) {
+    &__list {
+      left: 0;
+      right: auto;
+      min-width: 0;
+      width: max-content;
+      max-width: calc(100vw - 48px);
     }
   }
 }
