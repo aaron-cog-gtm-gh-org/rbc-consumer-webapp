@@ -24,7 +24,7 @@
           <ul class="options__list">
             @for (item of optionsMenuItems; track item) {
               <li>
-                <a href="#">{{ item }}</a>
+                <button type="button" (click)="selectMenuItem(account.id, item)">{{ item }}</button>
               </li>
             }
           </ul>

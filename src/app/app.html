@@ -6,8 +6,12 @@
   <div class="page__grid">
     <main class="page__main">
       <app-welcome-bar />
-      <app-account-list />
-      <app-investments-list />
+      @if (activeAccountHistoryId()) {
+        <app-account-history />
+      } @else {
+        <app-account-list />
+        <app-investments-list />
+      }
     </main>
 
     <div class="page__sidebar">
