@@ -1,0 +1,36 @@
+@if (account(); as account) {
+  <section class="section" aria-labelledby="account-history-heading" aria-live="polite">
+    <div class="section__head">
+      <h2 class="section__title" id="account-history-heading">
+        Balance History — {{ account.name }}
+      </h2>
+      <button type="button" class="history__back" (click)="close()">‹ Back to Accounts</button>
+    </div>
+
+    <div class="history__summary">
+      <div class="row__number">{{ account.number }}</div>
+      <div class="row__balance">
+        Current balance {{ account.balance | currency: 'CAD' : 'symbol-narrow' }}
+      </div>
+    </div>
+
+    @for (row of rows(); track row.date) {
+      <div class="row">
+        <div class="row__main">
+          <div class="row__name">{{ row.date | date: 'MMMM y' : 'UTC' }}</div>
+          <div class="history__bar" aria-hidden="true">
+            <span class="history__bar-fill" [style.width.%]="row.barWidth"></span>
+          </div>
+        </div>
+        <div class="row__balance">
+          {{ row.balance | currency: 'CAD' : 'symbol-narrow' }}
+          @if (row.change !== 0) {
+            <div class="history__change" [class.history__change--down]="row.change < 0">
+              {{ row.change > 0 ? '+' : '' }}{{ row.change | currency: 'CAD' : 'symbol-narrow' }}
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </section>
+}
