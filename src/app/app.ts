@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AccountHistory } from './components/account-history/account-history';
 import { AccountList } from './components/account-list/account-list';
 import { Header } from './components/header/header';
 import { InvestmentsList } from './components/investments-list/investments-list';
@@ -8,7 +9,16 @@ import { Subnav } from './components/subnav/subnav';
 import { WelcomeBar } from './components/welcome-bar/welcome-bar';
 
 @Component({
-  imports: [Header, Nav, Subnav, WelcomeBar, AccountList, InvestmentsList, QuickTransfer],
+  imports: [
+    Header,
+    Nav,
+    Subnav,
+    WelcomeBar,
+    AccountList,
+    AccountHistory,
+    InvestmentsList,
+    QuickTransfer,
+  ],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',

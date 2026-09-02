@@ -1,0 +1,53 @@
+@if (account(); as account) {
+  <section class="section" aria-labelledby="account-history-heading">
+    <div class="section__head">
+      <h2 class="section__title" id="account-history-heading">Account History</h2>
+      <button type="button" class="history__close" (click)="close()">Close</button>
+    </div>
+
+    <div class="history__summary">
+      <div class="row__main">
+        <div class="row__name">{{ account.name }}</div>
+        <div class="row__number">{{ account.number }}</div>
+      </div>
+      <div class="row__balance">{{ account.balance | currency: 'CAD' : 'symbol-narrow' }}</div>
+    </div>
+
+    @if (sparklinePoints()) {
+      <div class="history__chart">
+        <svg
+          [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight"
+          preserveAspectRatio="none"
+          role="img"
+          aria-label="Balance over time"
+        >
+          <polyline [attr.points]="sparklinePoints()" />
+        </svg>
+      </div>
+    }
+
+    <table class="history__table">
+      <caption class="history__caption">
+        Balance over time
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (point of history(); track point.date) {
+          <tr>
+            <td>{{ point.date | date: 'MMM y' }}</td>
+            <td>{{ point.balance | currency: 'CAD' : 'symbol-narrow' }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="2">No history available for this account.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+}

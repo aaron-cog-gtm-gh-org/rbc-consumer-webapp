@@ -21,6 +21,12 @@ export const selectStatementDate = createSelector(
 
 export const selectAllAccounts = createSelector(selectAccountsState, (state) => state.accounts);
 
+export const selectAccountById = (id: string | null) =>
+  createSelector(
+    selectAllAccounts,
+    (accounts) => accounts.find((account) => account.id === id) ?? null,
+  );
+
 export const selectBankAccounts = createSelector(selectAllAccounts, (accounts) =>
   accounts.filter((account) => account.kind === 'bank'),
 );
