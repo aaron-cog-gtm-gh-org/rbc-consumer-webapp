@@ -1,0 +1,76 @@
+@let selected = account();
+
+@if (selected) {
+  <div class="backdrop" (click)="close()">
+    <div
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="account-history-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal__head">
+        <div>
+          <h2 class="modal__title" id="account-history-title">{{ selected.name }}</h2>
+          <div class="modal__number">{{ selected.number }}</div>
+        </div>
+        <button
+          type="button"
+          class="modal__close"
+          aria-label="Close account history"
+          (click)="close()"
+        >
+          ×
+        </button>
+      </div>
+
+      <p class="modal__lead">
+        Balance over time — current balance
+        <strong>{{ selected.balance | currency: 'CAD' : 'symbol-narrow' }}</strong>
+      </p>
+
+      @if (history().length) {
+        @if (chartPoints().length) {
+          <svg
+            class="chart"
+            [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight"
+            role="img"
+            aria-label="Line chart of account balance over time"
+          >
+            <polyline class="chart__line" [attr.points]="chartLine()" />
+            @for (chartPoint of chartPoints(); track chartPoint.point.date) {
+              <circle class="chart__dot" [attr.cx]="chartPoint.x" [attr.cy]="chartPoint.y" r="3" />
+            }
+          </svg>
+        }
+
+        <table class="history">
+          <caption class="visually-hidden">
+            Monthly balance history for
+            {{
+              selected.name
+            }}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (point of history(); track point.date) {
+              <tr>
+                <td>{{ point.date | date: 'mediumDate' }}</td>
+                <td class="history__balance">
+                  {{ point.balance | currency: 'CAD' : 'symbol-narrow' }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+        <p class="modal__empty">No balance history is available for this account.</p>
+      }
+    </div>
+  </div>
+}
