@@ -1,0 +1,75 @@
+<div class="history">
+  <div class="history__head">
+    <h3 class="history__title">Balance history</h3>
+    <button type="button" class="history__close" (click)="close()">
+      Hide history <span aria-hidden="true">×</span>
+    </button>
+  </div>
+
+  <p class="history__caption">
+    {{ account().name }} — month-end balance, {{ account().history[0].label }} to
+    {{ account().history[account().history.length - 1].label }}
+  </p>
+
+  <svg
+    class="history__chart"
+    [attr.viewBox]="viewBox"
+    preserveAspectRatio="none"
+    role="img"
+    [attr.aria-label]="'Month-end balance for ' + account().name + ' over the last 12 months'"
+  >
+    <polygon class="history__area" [attr.points]="area()" />
+    <polyline class="history__line" [attr.points]="line()" />
+    @for (point of points(); track point.label) {
+      <circle class="history__dot" [attr.cx]="point.x" [attr.cy]="point.y" r="3.5" />
+    }
+  </svg>
+
+  <ol class="history__months">
+    @for (point of account().history; track point.label) {
+      <li>{{ point.label.split(' ')[0] }}</li>
+    }
+  </ol>
+
+  <dl class="history__stats">
+    <div>
+      <dt>12-month change</dt>
+      <dd [class.history__stat--up]="change() >= 0" [class.history__stat--down]="change() < 0">
+        {{ change() | currency: 'CAD' : 'symbol-narrow' }} ({{
+          changePercent() | number: '1.1-1'
+        }}%)
+      </dd>
+    </div>
+    <div>
+      <dt>Highest</dt>
+      <dd>{{ high().balance | currency: 'CAD' : 'symbol-narrow' }} in {{ high().label }}</dd>
+    </div>
+    <div>
+      <dt>Lowest</dt>
+      <dd>{{ low().balance | currency: 'CAD' : 'symbol-narrow' }} in {{ low().label }}</dd>
+    </div>
+  </dl>
+
+  <table class="visually-hidden">
+    <caption>
+      Month-end balance for
+      {{
+        account().name
+      }}
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Month</th>
+        <th scope="col">Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (point of account().history; track point.label) {
+        <tr>
+          <th scope="row">{{ point.label }}</th>
+          <td>{{ point.balance | currency: 'CAD' : 'symbol-narrow' }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
