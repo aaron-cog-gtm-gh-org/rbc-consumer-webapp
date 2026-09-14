@@ -22,6 +22,11 @@
         </button>
         @if (openMenuId() === account.id) {
           <ul class="options__list">
+            <li>
+              <button type="button" class="options__item" (click)="showHistory(account.id)">
+                View Balance History
+              </button>
+            </li>
             @for (item of optionsMenuItems; track item) {
               <li>
                 <a href="#">{{ item }}</a>
@@ -31,6 +36,10 @@
         }
       </div>
     </div>
+
+    @if (openHistoryId() === account.id) {
+      <app-account-history [account]="account" />
+    }
   }
 
   <div class="section__footer">

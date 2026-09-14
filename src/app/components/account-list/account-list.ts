@@ -6,12 +6,13 @@ import {
   selectBankAccounts,
   selectBankAccountsTotal,
 } from '../../store/accounts/accounts.selectors';
-import { accountMenuToggled } from '../../store/ui/ui.actions';
-import { selectOpenAccountMenuId } from '../../store/ui/ui.selectors';
+import { accountHistoryToggled, accountMenuToggled } from '../../store/ui/ui.actions';
+import { selectOpenAccountHistoryId, selectOpenAccountMenuId } from '../../store/ui/ui.selectors';
+import { AccountHistory } from '../account-history/account-history';
 
 @Component({
   selector: 'app-account-list',
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, AccountHistory],
   templateUrl: './account-list.html',
   styleUrl: './account-list.scss',
 })
@@ -35,7 +36,15 @@ export class AccountList {
     initialValue: null,
   });
 
+  protected readonly openHistoryId = toSignal(this.store.select(selectOpenAccountHistoryId), {
+    initialValue: null,
+  });
+
   protected toggleMenu(accountId: string): void {
     this.store.dispatch(accountMenuToggled({ accountId }));
+  }
+
+  protected showHistory(accountId: string): void {
+    this.store.dispatch(accountHistoryToggled({ accountId }));
   }
 }
