@@ -56,4 +56,13 @@
       text-align: left;
     }
   }
+
+  @media (max-width: 520px) {
+    &__list {
+      right: auto;
+      left: 0;
+      min-width: 0;
+      max-width: 100%;
+    }
+  }
 }
