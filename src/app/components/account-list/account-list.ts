@@ -6,7 +6,7 @@ import {
   selectBankAccounts,
   selectBankAccountsTotal,
 } from '../../store/accounts/accounts.selectors';
-import { accountMenuToggled } from '../../store/ui/ui.actions';
+import { accountHistoryOpened, accountMenuToggled } from '../../store/ui/ui.actions';
 import { selectOpenAccountMenuId } from '../../store/ui/ui.selectors';
 
 @Component({
@@ -37,5 +37,9 @@ export class AccountList {
 
   protected toggleMenu(accountId: string): void {
     this.store.dispatch(accountMenuToggled({ accountId }));
+  }
+
+  protected openHistory(accountId: string): void {
+    this.store.dispatch(accountHistoryOpened({ accountId }));
   }
 }
