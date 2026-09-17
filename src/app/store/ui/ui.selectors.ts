@@ -17,6 +17,11 @@ export const selectOpenAccountMenuId = createSelector(
   (state) => state.openAccountMenuId,
 );
 
+export const selectHistoryAccountId = createSelector(
+  selectUiState,
+  (state) => state.historyAccountId,
+);
+
 export const selectUnreadMessages = createSelector(selectUiState, (state) => state.unreadMessages);
 
 export const selectSearchQuery = createSelector(selectUiState, (state) => state.searchQuery);

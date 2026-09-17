@@ -1,0 +1,61 @@
+@if (account(); as account) {
+  <div class="history-overlay" (click)="close()">
+    <section
+      class="history"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="account-history-heading"
+      (click)="$event.stopPropagation()"
+    >
+      <header class="history__head">
+        <div>
+          <h2 class="history__title" id="account-history-heading">{{ account.name }}</h2>
+          <p class="history__number">{{ account.number }}</p>
+        </div>
+        <button type="button" class="history__close" (click)="close()">Close</button>
+      </header>
+
+      <div class="history__body">
+        <table class="history__table">
+          <caption class="visually-hidden">
+            Recent transactions for
+            {{
+              account.name
+            }}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Description</th>
+              <th scope="col" class="history__num">Amount</th>
+              <th scope="col" class="history__num">Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (transaction of account.transactions; track transaction.id) {
+              <tr>
+                <td class="history__date">{{ transaction.date }}</td>
+                <td>{{ transaction.description }}</td>
+                <td class="history__num" [class.history__num--credit]="transaction.amount > 0">
+                  {{ transaction.amount | currency: 'CAD' : 'symbol-narrow' }}
+                </td>
+                <td class="history__num">
+                  {{ transaction.balance | currency: 'CAD' : 'symbol-narrow' }}
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="4" class="history__empty">No transactions to show yet.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <footer class="history__footer">
+        <span>Current balance</span>
+        <span>{{ account.balance | currency: 'CAD' : 'symbol-narrow' }}</span>
+      </footer>
+    </section>
+  </div>
+}

@@ -22,6 +22,11 @@
         </button>
         @if (openMenuId() === account.id) {
           <ul class="options__list">
+            <li>
+              <button type="button" class="options__action" (click)="openHistory(account.id)">
+                View Account History
+              </button>
+            </li>
             @for (item of optionsMenuItems; track item) {
               <li>
                 <a href="#">{{ item }}</a>
