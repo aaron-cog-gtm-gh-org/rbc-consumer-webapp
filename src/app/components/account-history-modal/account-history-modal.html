@@ -1,0 +1,51 @@
+@if (account(); as account) {
+  <div class="backdrop" (click)="close()">
+    <div
+      class="dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="account-history-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="dialog__head">
+        <div>
+          <h2 class="dialog__title" id="account-history-title">{{ account.name }}</h2>
+          <div class="dialog__subtitle">{{ account.number }} &middot; Account History</div>
+        </div>
+        <button
+          type="button"
+          class="dialog__close"
+          aria-label="Close account history"
+          (click)="close()"
+        >
+          &times;
+        </button>
+      </div>
+
+      @if (transactions().length) {
+        <table class="history">
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Description</th>
+              <th scope="col" class="history__amount">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (transaction of transactions(); track $index) {
+              <tr>
+                <td>{{ transaction.date }}</td>
+                <td>{{ transaction.description }}</td>
+                <td class="history__amount">
+                  {{ transaction.amount | currency: 'CAD' : 'symbol-narrow' }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+        <p class="history__empty">No recent transactions for this account.</p>
+      }
+    </div>
+  </div>
+}

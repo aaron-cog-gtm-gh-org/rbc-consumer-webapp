@@ -1,5 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import {
+  accountHistoryClosed,
+  accountHistoryOpened,
   accountMenuToggled,
   menusClosed,
   navTabSelected,
@@ -15,6 +17,7 @@ export interface UiState {
   activeSubNavTab: string;
   userMenuOpen: boolean;
   openAccountMenuId: string | null;
+  openHistoryAccountId: string | null;
   unreadMessages: number;
   searchQuery: string;
 }
@@ -24,6 +27,7 @@ export const initialUiState: UiState = {
   activeSubNavTab: 'Accounts Summary',
   userMenuOpen: false,
   openAccountMenuId: null,
+  openHistoryAccountId: null,
   unreadMessages: 3,
   searchQuery: '',
 };
@@ -47,6 +51,18 @@ export const uiReducer = createReducer(
     userMenuOpen: false,
     openAccountMenuId: state.openAccountMenuId === accountId ? null : accountId,
   })),
-  on(menusClosed, (state) => ({ ...state, userMenuOpen: false, openAccountMenuId: null })),
+  on(accountHistoryOpened, (state, { accountId }) => ({
+    ...state,
+    openHistoryAccountId: accountId,
+    userMenuOpen: false,
+    openAccountMenuId: null,
+  })),
+  on(accountHistoryClosed, (state) => ({ ...state, openHistoryAccountId: null })),
+  on(menusClosed, (state) => ({
+    ...state,
+    userMenuOpen: false,
+    openAccountMenuId: null,
+    openHistoryAccountId: null,
+  })),
   on(searchQueryChanged, (state, { query }) => ({ ...state, searchQuery: query })),
 );
