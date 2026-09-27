@@ -2,38 +2,50 @@
 
 @include section.section-card;
 
-.options {
+%menu-anchor {
   position: relative;
   flex: 0 0 auto;
+}
+
+%menu-trigger {
+  background: var(--rbc-surface);
+  border: 1px solid var(--rbc-border);
+  border-radius: 3px;
+  color: var(--rbc-link);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+
+  &:hover {
+    border-color: var(--rbc-blue);
+  }
+}
+
+%menu-list {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 10;
+  min-width: 210px;
+  margin: 0;
+  padding: 6px 0;
+  list-style: none;
+  background: var(--rbc-surface);
+  border: 1px solid var(--rbc-border);
+  border-radius: 3px;
+  box-shadow: 0 6px 16px rgb(0 0 0 / 12%);
+}
+
+.options {
+  @extend %menu-anchor;
 
   &__trigger {
-    background: var(--rbc-surface);
-    border: 1px solid var(--rbc-border);
-    border-radius: 3px;
-    color: var(--rbc-link);
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 6px 10px;
-
-    &:hover {
-      border-color: var(--rbc-blue);
-    }
+    @extend %menu-trigger;
   }
 
   &__list {
-    position: absolute;
-    right: 0;
-    top: calc(100% + 4px);
-    z-index: 10;
-    min-width: 210px;
-    margin: 0;
-    padding: 6px 0;
-    list-style: none;
-    background: var(--rbc-surface);
-    border: 1px solid var(--rbc-border);
-    border-radius: 3px;
-    box-shadow: 0 6px 16px rgb(0 0 0 / 12%);
+    @extend %menu-list;
 
     a {
       display: block;
@@ -45,5 +57,71 @@
         text-decoration: none;
       }
     }
+  }
+}
+
+.history {
+  @extend %menu-anchor;
+
+  margin-right: 8px;
+
+  &__trigger {
+    @extend %menu-trigger;
+  }
+
+  &__list {
+    @extend %menu-list;
+
+    width: max-content;
+    min-width: 0;
+    max-width: min(340px, calc(100vw - 40px));
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: 82px 1fr auto;
+    gap: 10px;
+    align-items: baseline;
+    padding: 8px 14px;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+
+    & + & {
+      border-top: 1px solid var(--rbc-border);
+    }
+  }
+
+  &__date {
+    color: var(--rbc-muted, #666);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  &__amount {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 520px) {
+  .row {
+    position: relative;
+  }
+
+  .history,
+  .options {
+    position: static;
+  }
+
+  .history {
+    margin-right: 0;
+  }
+
+  .history__list,
+  .options__list {
+    left: 16px;
+    right: 16px;
+    width: auto;
+    max-width: none;
   }
 }

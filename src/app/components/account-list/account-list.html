@@ -11,6 +11,30 @@
         <div class="row__number">{{ account.number }}</div>
       </div>
       <div class="row__balance">{{ account.balance | currency: 'CAD' : 'symbol-narrow' }}</div>
+      <div class="history">
+        <button
+          type="button"
+          class="history__trigger"
+          [attr.aria-label]="'History for ' + account.name"
+          [attr.aria-expanded]="openHistoryId() === account.id"
+          (click)="toggleHistory(account.id)"
+        >
+          History <span aria-hidden="true">▾</span>
+        </button>
+        @if (openHistoryId() === account.id) {
+          <ul class="history__list">
+            @for (transaction of account.history; track $index) {
+              <li class="history__item">
+                <span class="history__date">{{ transaction.date }}</span>
+                <span class="history__description">{{ transaction.description }}</span>
+                <span class="history__amount">{{
+                  transaction.amount | currency: 'CAD' : 'symbol-narrow'
+                }}</span>
+              </li>
+            }
+          </ul>
+        }
+      </div>
       <div class="options">
         <button
           type="button"

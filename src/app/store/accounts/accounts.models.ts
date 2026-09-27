@@ -1,11 +1,18 @@
 export type AccountKind = 'bank' | 'investment';
 
+export interface Transaction {
+  date: string;
+  description: string;
+  amount: number;
+}
+
 export interface Account {
   id: string;
   name: string;
   number: string;
   balance: number;
   kind: AccountKind;
+  history: Transaction[];
 }
 
 export interface AccountsState {
