@@ -6,8 +6,8 @@ import {
   selectBankAccounts,
   selectBankAccountsTotal,
 } from '../../store/accounts/accounts.selectors';
-import { accountMenuToggled } from '../../store/ui/ui.actions';
-import { selectOpenAccountMenuId } from '../../store/ui/ui.selectors';
+import { accountHistoryToggled, accountMenuToggled } from '../../store/ui/ui.actions';
+import { selectOpenAccountHistoryId, selectOpenAccountMenuId } from '../../store/ui/ui.selectors';
 
 @Component({
   selector: 'app-account-list',
@@ -35,7 +35,15 @@ export class AccountList {
     initialValue: null,
   });
 
+  protected readonly openHistoryId = toSignal(this.store.select(selectOpenAccountHistoryId), {
+    initialValue: null,
+  });
+
   protected toggleMenu(accountId: string): void {
     this.store.dispatch(accountMenuToggled({ accountId }));
+  }
+
+  protected toggleHistory(accountId: string): void {
+    this.store.dispatch(accountHistoryToggled({ accountId }));
   }
 }
