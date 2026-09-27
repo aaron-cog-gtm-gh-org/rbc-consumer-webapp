@@ -27,33 +27,40 @@ All app state is in NgRx; there are no routes (single page). Useful files:
 
 - `src/app/store/accounts/accounts.reducer.ts` — mock balances and the transfer-applied reducer.
   Initial: Day to Day `$5,407.48`, eSavings `$12,452.00`, RRSP `$8,550.00`.
-- `src/app/store/transfer/transfer.effects.ts` — **all transfer validation lives in an effect**,
-  not in the template. Check the order of the `validate()` guards before writing test cases.
+- `src/app/store/transfer/transfer.validation.ts` — parsing and validation helpers invoked by
+  `transfer.effects.ts`, not template validation. Check guard order before writing test cases.
 - `src/app/store/ui/ui.reducer.ts` — nav/subnav active tab and dropdown mutual exclusion.
 
 Resetting state is just a page reload (Ctrl+R) since nothing is persisted.
 
 ### Validation order gotcha
 
-`validate()` checks the amount **before** checking that the two accounts differ. So to see
+`validateTransfer()` checks the amount **before** checking that the two accounts differ. So to see
 "Choose two different accounts." you must enter a valid non-zero amount first; otherwise you
 get "Enter an amount greater than $0.00." Read the guard order rather than assuming it.
 
 ## Known/likely pitfalls when testing the amount input
 
-The amount field is a `<input type="number">` with a one-way `[value]="form().amount ?? ''"`
-binding plus an `(input)` handler dispatching to the store. This combination has a real trap:
+The current amount field is `<input type="text" inputmode="decimal">`, retaining the raw string
+in NgRx. Negative text should remain intact and be rejected with an in-app error. Earlier revisions
+used a number input and could lose a typed minus sign, so inspect the current template and check
+both the displayed input and unchanged balances rather than assuming validation ran.
 
-- Typing a leading `-` makes the browser report `value === ''`, which sets the store amount to
-  `null`, which re-renders the input as empty and **wipes the minus sign**. The result is that a
-  typed negative can silently become a positive number and transfer real money with no error.
-  Always screenshot/inspect the field **before** submitting a negative, and check whether balances
-  moved afterwards — do not assume the effect's `amount <= 0` guard was reached.
-- Behaviour differs depending on whether the field was already populated, so test both
-  "type -50 into an empty field" and "select-all then type -50 over an existing value".
-- Native `min="0"` and `step="0.01"` produce **browser tooltips** ("Please enter a valid value…"),
-  not the in-app red alert. A blocked submit may therefore show no NgRx error at all. Distinguish
-  native validation from effect validation when reporting.
+- `-50` and `0`: "Enter an amount greater than $0.00."
+- `1.234`: "Enter an amount with at most two decimal places."
+- An amount exceeding the source balance: "Insufficient funds in the selected account."
+- Form edits clear errors and move Submit vertically; pressing Enter in the amount field avoids
+  accidentally clicking the old button position.
+
+## Account History checks
+
+History belongs to the Bank Accounts list (Day to Day and eSavings), not the RRSP investment.
+Transactions are seeded mock data; completed quick transfers update balances but intentionally do
+not append transactions. Check accessible trigger names as well as visible labels.
+
+Test primary navigation separately from secondary navigation and test both directions of menu
+mutual exclusion. An open dropdown may cover the next row's trigger; keyboard Tab/Enter can verify
+state switching separately, but do not count that as proof the pointer interaction is unobstructed.
 
 ## Responsive testing on a VNC box
 
@@ -73,6 +80,12 @@ JSON.stringify({vw: document.documentElement.clientWidth,
                 scrollW: document.documentElement.scrollWidth,
                 overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth})
 ```
+
+Also inspect the dropdown's `getBoundingClientRect().left/right` and screenshot its full columns.
+A right-anchored dropdown can clip beyond the **left** viewport edge without increasing
+`documentElement.scrollWidth`. Width clamping alone does not prove the anchor stays onscreen.
+On a 1600px desktop, browser zoom to 400% provides a roughly 396px content viewport while keeping
+the browser maximized for recording; use Ctrl+0 to restore.
 
 Maximize before recording: `wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz`
 (do not use `xdotool key super+Up`, which tiles to half-screen).

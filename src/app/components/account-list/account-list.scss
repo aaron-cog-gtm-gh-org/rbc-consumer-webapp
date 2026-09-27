@@ -102,3 +102,15 @@
     white-space: nowrap;
   }
 }
+
+@media (max-width: 520px) {
+  .history {
+    margin-right: 0;
+  }
+
+  .history__list,
+  .options__list {
+    left: 0;
+    right: auto;
+  }
+}
