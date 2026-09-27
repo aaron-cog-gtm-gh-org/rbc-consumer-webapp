@@ -104,13 +104,24 @@
 }
 
 @media (max-width: 520px) {
+  .row {
+    position: relative;
+  }
+
+  .history,
+  .options {
+    position: static;
+  }
+
   .history {
     margin-right: 0;
   }
 
   .history__list,
   .options__list {
-    left: 0;
-    right: auto;
+    left: 16px;
+    right: 16px;
+    width: auto;
+    max-width: none;
   }
 }
