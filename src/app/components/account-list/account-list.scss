@@ -72,7 +72,9 @@
   &__list {
     @extend %menu-list;
 
-    min-width: 320px;
+    width: max-content;
+    min-width: 0;
+    max-width: min(340px, calc(100vw - 40px));
   }
 
   &__item {
@@ -82,6 +84,7 @@
     align-items: baseline;
     padding: 8px 14px;
     font-size: 13px;
+    overflow-wrap: anywhere;
 
     & + & {
       border-top: 1px solid var(--rbc-border);

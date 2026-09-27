@@ -15,6 +15,7 @@
         <button
           type="button"
           class="history__trigger"
+          [attr.aria-label]="'History for ' + account.name"
           [attr.aria-expanded]="openHistoryId() === account.id"
           (click)="toggleHistory(account.id)"
         >
