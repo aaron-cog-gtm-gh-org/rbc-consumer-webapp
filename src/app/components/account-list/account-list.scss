@@ -35,15 +35,115 @@
     border-radius: 3px;
     box-shadow: 0 6px 16px rgb(0 0 0 / 12%);
 
-    a {
+    a,
+    button {
       display: block;
+      width: 100%;
       padding: 8px 14px;
+      background: none;
+      border: 0;
+      color: var(--rbc-link);
+      cursor: pointer;
+      font: inherit;
       font-size: 13px;
+      text-align: left;
 
       &:hover {
         background: var(--rbc-band);
         text-decoration: none;
       }
+    }
+  }
+}
+
+.history {
+  padding: 0 16px 12px;
+  background: var(--rbc-band);
+  border-bottom: 1px solid var(--rbc-border);
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+  }
+
+  &__title {
+    margin: 0;
+    color: var(--rbc-blue);
+    font-size: 14px;
+  }
+
+  &__close {
+    background: var(--rbc-surface);
+    border: 1px solid var(--rbc-border);
+    border-radius: 3px;
+    color: var(--rbc-link);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 10px;
+
+    &:hover {
+      border-color: var(--rbc-blue);
+    }
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: var(--rbc-surface);
+    border: 1px solid var(--rbc-border);
+    border-radius: 3px;
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 200px 1fr auto;
+    align-items: baseline;
+    gap: 12px;
+    padding: 10px 14px;
+    font-size: 13px;
+
+    & + & {
+      border-top: 1px solid var(--rbc-border);
+    }
+  }
+
+  &__date {
+    color: var(--rbc-muted);
+    font-size: 12px;
+  }
+
+  &__amount {
+    font-weight: 600;
+    text-align: right;
+    white-space: nowrap;
+
+    &--credit {
+      color: var(--rbc-positive);
+    }
+  }
+
+  &__empty {
+    margin: 0;
+    padding: 12px 14px;
+    background: var(--rbc-surface);
+    border: 1px solid var(--rbc-border);
+    border-radius: 3px;
+    color: var(--rbc-muted);
+    font-size: 13px;
+  }
+
+  @media (max-width: 520px) {
+    &__row {
+      grid-template-columns: 1fr auto;
+    }
+
+    &__date {
+      grid-column: 1 / -1;
     }
   }
 }

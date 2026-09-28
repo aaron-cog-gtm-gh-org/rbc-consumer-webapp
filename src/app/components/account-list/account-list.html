@@ -24,13 +24,50 @@
           <ul class="options__list">
             @for (item of optionsMenuItems; track item) {
               <li>
-                <a href="#">{{ item }}</a>
+                @if (item === viewHistoryItem) {
+                  <button type="button" (click)="viewHistory(account.id)">{{ item }}</button>
+                } @else {
+                  <a href="#">{{ item }}</a>
+                }
               </li>
             }
           </ul>
         }
       </div>
     </div>
+    @if (openHistoryId() === account.id) {
+      <div
+        class="history"
+        role="region"
+        [id]="'history-' + account.id"
+        [attr.aria-label]="'Recent transactions for ' + account.name"
+      >
+        <div class="history__head">
+          <h3 class="history__title">Recent transactions</h3>
+          <button type="button" class="history__close" (click)="closeHistory()">
+            Close history
+          </button>
+        </div>
+        @if (openHistory().length) {
+          <ul class="history__list">
+            @for (transaction of openHistory(); track transaction.id) {
+              <li class="history__row">
+                <span class="history__date">{{ transaction.date }}</span>
+                <span class="history__description">{{ transaction.description }}</span>
+                <span
+                  class="history__amount"
+                  [class.history__amount--credit]="transaction.amount > 0"
+                >
+                  {{ transaction.amount | currency: 'CAD' : 'symbol-narrow' }}
+                </span>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="history__empty">No transactions in the last 30 days.</p>
+        }
+      </div>
+    }
   }
 
   <div class="section__footer">
