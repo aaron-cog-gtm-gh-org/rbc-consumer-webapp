@@ -6,8 +6,13 @@ import {
   selectBankAccounts,
   selectBankAccountsTotal,
 } from '../../store/accounts/accounts.selectors';
-import { accountMenuToggled } from '../../store/ui/ui.actions';
+import { accountHistoryOpened, accountMenuToggled } from '../../store/ui/ui.actions';
 import { selectOpenAccountMenuId } from '../../store/ui/ui.selectors';
+
+interface OptionsMenuItem {
+  label: string;
+  opensHistory?: boolean;
+}
 
 @Component({
   selector: 'app-account-list',
@@ -18,11 +23,12 @@ import { selectOpenAccountMenuId } from '../../store/ui/ui.selectors';
 export class AccountList {
   private readonly store = inject(Store);
 
-  protected readonly optionsMenuItems = [
-    'View Details',
-    'Pay Bills & Transfer Funds',
-    'Set Up an Alert',
-    'Void Cheque Information',
+  protected readonly optionsMenuItems: OptionsMenuItem[] = [
+    { label: 'View Details' },
+    { label: 'Account History', opensHistory: true },
+    { label: 'Pay Bills & Transfer Funds' },
+    { label: 'Set Up an Alert' },
+    { label: 'Void Cheque Information' },
   ];
 
   protected readonly accounts = toSignal(this.store.select(selectBankAccounts), {
@@ -37,5 +43,9 @@ export class AccountList {
 
   protected toggleMenu(accountId: string): void {
     this.store.dispatch(accountMenuToggled({ accountId }));
+  }
+
+  protected openHistory(accountId: string): void {
+    this.store.dispatch(accountHistoryOpened({ accountId }));
   }
 }
