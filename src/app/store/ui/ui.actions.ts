@@ -14,6 +14,13 @@ export const accountMenuToggled = createAction(
   props<{ accountId: string }>(),
 );
 
+export const accountHistoryOpened = createAction(
+  '[UI] Account History Opened',
+  props<{ accountId: string }>(),
+);
+
+export const accountHistoryClosed = createAction('[UI] Account History Closed');
+
 export const menusClosed = createAction('[UI] Menus Closed');
 
 export const searchQueryChanged = createAction(

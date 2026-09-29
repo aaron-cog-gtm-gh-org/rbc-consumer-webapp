@@ -1,0 +1,60 @@
+<div class="backdrop" (click)="onBackdropClick($event)">
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="account-history-title">
+    <div class="dialog__head">
+      <div class="dialog__heading">
+        <h2 class="dialog__title" id="account-history-title">Account History</h2>
+        @if (account(); as acct) {
+          <p class="dialog__account">
+            {{ acct.name }} <span class="dialog__number">{{ acct.number }}</span>
+          </p>
+        }
+      </div>
+      <button
+        #closeButton
+        type="button"
+        class="dialog__close"
+        aria-label="Close account history"
+        (click)="close()"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+
+    <div class="dialog__body">
+      @if (account(); as acct) {
+        @if (acct.transactions.length > 0) {
+          <table class="history" [attr.aria-label]="'Recent transactions for ' + acct.name">
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Description</th>
+                <th scope="col" class="history__amount">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (transaction of acct.transactions; track transaction.id) {
+                <tr>
+                  <td class="history__date">{{ transaction.date | date: 'MMM d, y' }}</td>
+                  <td>{{ transaction.description }}</td>
+                  <td
+                    class="history__amount"
+                    [class.history__amount--credit]="transaction.amount > 0"
+                  >
+                    {{ transaction.amount > 0 ? '+' : ''
+                    }}{{ transaction.amount | currency: 'CAD' : 'symbol-narrow' }}
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        } @else {
+          <p class="empty">No transactions to show for this account yet.</p>
+        }
+      }
+    </div>
+
+    <div class="dialog__foot">
+      <button type="button" class="dialog__done" (click)="close()">Close</button>
+    </div>
+  </div>
+</div>

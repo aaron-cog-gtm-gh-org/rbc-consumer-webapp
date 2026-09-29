@@ -1,5 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import {
+  accountHistoryClosed,
+  accountHistoryOpened,
   accountMenuToggled,
   menusClosed,
   navTabSelected,
@@ -10,6 +12,13 @@ import {
 
 export const uiFeatureKey = 'ui';
 
+export interface AccountHistoryModalState {
+  open: boolean;
+  accountId: string | null;
+}
+
+const closedAccountHistoryModal: AccountHistoryModalState = { open: false, accountId: null };
+
 export interface UiState {
   activeNavTab: string;
   activeSubNavTab: string;
@@ -17,6 +26,7 @@ export interface UiState {
   openAccountMenuId: string | null;
   unreadMessages: number;
   searchQuery: string;
+  accountHistoryModal: AccountHistoryModalState;
 }
 
 export const initialUiState: UiState = {
@@ -26,6 +36,7 @@ export const initialUiState: UiState = {
   openAccountMenuId: null,
   unreadMessages: 3,
   searchQuery: '',
+  accountHistoryModal: closedAccountHistoryModal,
 };
 
 export const uiReducer = createReducer(
@@ -35,18 +46,36 @@ export const uiReducer = createReducer(
     activeNavTab: tab,
     userMenuOpen: false,
     openAccountMenuId: null,
+    accountHistoryModal: closedAccountHistoryModal,
   })),
   on(subNavTabSelected, (state, { tab }) => ({ ...state, activeSubNavTab: tab })),
   on(userMenuToggled, (state) => ({
     ...state,
     userMenuOpen: !state.userMenuOpen,
     openAccountMenuId: null,
+    accountHistoryModal: closedAccountHistoryModal,
   })),
   on(accountMenuToggled, (state, { accountId }) => ({
     ...state,
     userMenuOpen: false,
     openAccountMenuId: state.openAccountMenuId === accountId ? null : accountId,
+    accountHistoryModal: closedAccountHistoryModal,
   })),
-  on(menusClosed, (state) => ({ ...state, userMenuOpen: false, openAccountMenuId: null })),
+  on(accountHistoryOpened, (state, { accountId }) => ({
+    ...state,
+    userMenuOpen: false,
+    openAccountMenuId: null,
+    accountHistoryModal: { open: true, accountId },
+  })),
+  on(accountHistoryClosed, (state) => ({
+    ...state,
+    accountHistoryModal: closedAccountHistoryModal,
+  })),
+  on(menusClosed, (state) => ({
+    ...state,
+    userMenuOpen: false,
+    openAccountMenuId: null,
+    accountHistoryModal: closedAccountHistoryModal,
+  })),
   on(searchQueryChanged, (state, { query }) => ({ ...state, searchQuery: query })),
 );

@@ -35,10 +35,16 @@
     border-radius: 3px;
     box-shadow: 0 6px 16px rgb(0 0 0 / 12%);
 
-    a {
+    .options__item {
       display: block;
+      width: 100%;
       padding: 8px 14px;
+      background: none;
+      border: 0;
+      color: var(--rbc-link);
+      cursor: pointer;
       font-size: 13px;
+      text-align: left;
 
       &:hover {
         background: var(--rbc-band);
