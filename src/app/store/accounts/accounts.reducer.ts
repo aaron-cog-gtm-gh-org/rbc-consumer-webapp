@@ -30,6 +30,20 @@ export const initialAccountsState: AccountsState = {
       balance: 8550.0,
       kind: 'investment',
     },
+    {
+      id: 'personal-loan',
+      name: 'RBC Personal Loan',
+      number: '05812-9203418',
+      balance: 7825.5,
+      kind: 'loan',
+    },
+    {
+      id: 'mortgage',
+      name: 'RBC Mortgage',
+      number: '05812-6610257',
+      balance: 342180.0,
+      kind: 'loan',
+    },
   ],
 };
 

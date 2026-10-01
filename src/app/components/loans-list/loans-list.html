@@ -1,0 +1,45 @@
+<section class="section" aria-labelledby="loans-heading">
+  <div class="section__head">
+    <h2 class="section__title" id="loans-heading">Loans &amp; Mortgages</h2>
+    <a class="section__head-link" href="#">Mortgage Payment Calculator</a>
+  </div>
+
+  @for (loan of loans(); track loan.id) {
+    <div class="row">
+      <div class="row__main">
+        <a class="row__name" href="#">{{ loan.name }}</a>
+        <div class="row__number">{{ loan.number }}</div>
+      </div>
+      <div class="row__balance">{{ loan.balance | currency: 'CAD' : 'symbol-narrow' }}</div>
+      <div class="options">
+        <button
+          type="button"
+          class="options__trigger"
+          [attr.aria-expanded]="openMenuId() === loan.id"
+          (click)="toggleMenu(loan.id)"
+        >
+          Options <span aria-hidden="true">▾</span>
+        </button>
+        @if (openMenuId() === loan.id) {
+          <ul class="options__list">
+            @for (item of optionsMenuItems; track item) {
+              <li>
+                <a href="#">{{ item }}</a>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    </div>
+  }
+
+  <div class="section__footer">
+    <button type="button" class="add-button">+ Apply for a Loan</button>
+    <a href="#">Explore Mortgage Options</a>
+  </div>
+
+  <div class="total">
+    <span>Total Owing (CAD)</span>
+    <span>{{ total() | currency: 'CAD' : 'symbol-narrow' }}</span>
+  </div>
+</section>
