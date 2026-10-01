@@ -29,6 +29,16 @@ export const selectInvestmentAccounts = createSelector(selectAllAccounts, (accou
   accounts.filter((account) => account.kind === 'investment'),
 );
 
+export const selectLoanAccounts = createSelector(selectAllAccounts, (accounts) =>
+  accounts.filter((account) => account.kind === 'loan'),
+);
+
+export const selectTransferableAccounts = createSelector(selectAllAccounts, (accounts) =>
+  accounts.filter((account) => account.kind !== 'loan'),
+);
+
 export const selectBankAccountsTotal = createSelector(selectBankAccounts, sumBalances);
 
 export const selectInvestmentsTotal = createSelector(selectInvestmentAccounts, sumBalances);
+
+export const selectLoansTotal = createSelector(selectLoanAccounts, sumBalances);

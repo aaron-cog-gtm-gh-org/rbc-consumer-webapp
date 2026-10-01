@@ -1,4 +1,4 @@
-export type AccountKind = 'bank' | 'investment';
+export type AccountKind = 'bank' | 'investment' | 'loan';
 
 export interface Account {
   id: string;

@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
-import { selectAllAccounts } from '../../store/accounts/accounts.selectors';
+import { selectTransferableAccounts } from '../../store/accounts/accounts.selectors';
 import {
   transferConfirmationDismissed,
   transferFormChanged,
@@ -30,7 +30,7 @@ export class QuickTransfer {
     'International Money Transfer',
   ];
 
-  protected readonly accounts = toSignal(this.store.select(selectAllAccounts), {
+  protected readonly accounts = toSignal(this.store.select(selectTransferableAccounts), {
     initialValue: [],
   });
   protected readonly form = toSignal(this.store.select(selectTransferForm), {
