@@ -1,0 +1,59 @@
+<section class="section" aria-labelledby="account-history-heading">
+  <div class="section__head">
+    <div>
+      <h2 class="section__title" id="account-history-heading">Account History</h2>
+      @if (account(); as account) {
+        <div class="history__account">
+          <span class="row__name">{{ account.name }}</span>
+          <span class="row__number">{{ account.number }}</span>
+        </div>
+      }
+    </div>
+    <button type="button" class="history__close" (click)="close()">
+      <span aria-hidden="true">‹</span> Back to Accounts Summary
+    </button>
+  </div>
+
+  @if (account(); as account) {
+    <div class="history__summary">
+      <span>Current Balance</span>
+      <span class="row__balance">{{ account.balance | currency: 'CAD' : 'symbol-narrow' }}</span>
+    </div>
+
+    @if (transactions().length) {
+      <table class="history__table">
+        <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Description</th>
+            <th scope="col" class="history__num">Amount</th>
+            <th scope="col" class="history__num">Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (transaction of transactions(); track transaction.id) {
+            <tr>
+              <td class="history__date">{{ transaction.date | date: 'MMM d, y' : 'UTC' }}</td>
+              <td>{{ transaction.description }}</td>
+              <td
+                class="history__num"
+                [class.history__credit]="transaction.amount > 0"
+                [class.history__debit]="transaction.amount < 0"
+              >
+                {{ transaction.amount > 0 ? '+' : ''
+                }}{{ transaction.amount | currency: 'CAD' : 'symbol-narrow' }}
+              </td>
+              <td class="history__num">
+                {{ transaction.balance | currency: 'CAD' : 'symbol-narrow' }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <p class="history__empty">No transactions have posted to this account yet.</p>
+    }
+  } @else {
+    <p class="history__empty">Select an account to view its history.</p>
+  }
+</section>
