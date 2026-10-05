@@ -1,6 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { Account, AccountsState } from './accounts.models';
 import { accountsFeatureKey } from './accounts.reducer';
+import { selectHistoryAccountId } from '../ui/ui.selectors';
 
 const sumBalances = (accounts: Account[]): number =>
   accounts.reduce((total, account) => total + account.balance, 0);
@@ -32,3 +33,9 @@ export const selectInvestmentAccounts = createSelector(selectAllAccounts, (accou
 export const selectBankAccountsTotal = createSelector(selectBankAccounts, sumBalances);
 
 export const selectInvestmentsTotal = createSelector(selectInvestmentAccounts, sumBalances);
+
+export const selectHistoryAccount = createSelector(
+  selectAllAccounts,
+  selectHistoryAccountId,
+  (accounts, accountId) => accounts.find((account) => account.id === accountId) ?? null,
+);

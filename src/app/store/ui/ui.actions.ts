@@ -20,3 +20,10 @@ export const searchQueryChanged = createAction(
   '[UI] Search Query Changed',
   props<{ query: string }>(),
 );
+
+export const accountHistoryRequested = createAction(
+  '[UI] Account History Requested',
+  props<{ accountId: string }>(),
+);
+
+export const accountHistoryClosed = createAction('[UI] Account History Closed');

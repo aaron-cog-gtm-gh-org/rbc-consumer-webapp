@@ -1,82 +1,89 @@
 ---
 name: testing-rbc-webapp
-description: How to run and end-to-end test the RBC Consumer Webapp (Angular 22 + NgRx) Accounts Summary demo locally, including the quick-transfer form, NgRx-effect validation, dropdown state, and responsive checks.
+description: Run and end-to-end test the RBC Angular Accounts Summary demo, including account histories, quick transfers, and responsive layouts.
 ---
 
 # Testing the RBC Consumer Webapp
 
 ## Running the app
 
-Node 22 is required (Angular 22 CLI). Dependencies are usually already installed.
+Use Node 22 and the repository's installed dependencies:
 
 ```bash
-source ~/.nvm/nvm.sh          # nvm default is 22
-cd /path/to/rbc-consumer-webapp
+source ~/.nvm/nvm.sh
 npx ng serve --port 4200
 ```
 
-Then open http://localhost:4200. There is **no backend and no auth** — all data is mocked
-in the NgRx store, so nothing needs to be logged into and no secrets are required.
+Wait for Angular's ready message or an HTTP 200 before navigating to
+http://localhost:4200. Startup duration varies; do not assume a fixed delay.
+There is no backend, auth, or route navigation. All data is in NgRx, and
+reloading resets transfers and UI state.
 
-Startup takes ~40-60s for the first bundle. Poll `curl -s -o /dev/null -w "%{http_code}" http://localhost:4200`
-until it returns 200 rather than guessing a sleep duration.
+## Source and UI paths
 
-## Where state lives
+- `src/app/store/accounts/accounts.reducer.ts`: seeded accounts, histories,
+  and transfer posting.
+- `src/app/store/transfer/transfer.reducer.ts`: form defaults.
+- `src/app/store/transfer/transfer.effects.ts`: transfer orchestration.
+- `src/app/store/transfer/transfer.validation.ts`: amount parsing and guards.
+- `src/app/store/ui/ui.reducer.ts`: menu, selected history, and nav state.
+- Bank Accounts → an account's Options → View Account History selects that
+  account. The section appears below Bank Accounts; it does not navigate.
+- Back to Accounts Summary removes history; switching primary nav tabs clears it.
+- Quick Payments & Transfers defaults to Day to Day → eSavings in CAD.
+  A valid submission updates both balances and adds rows to both histories.
 
-All app state is in NgRx; there are no routes (single page). Useful files:
+## Validation checks
 
-- `src/app/store/accounts/accounts.reducer.ts` — mock balances and the transfer-applied reducer.
-  Initial: Day to Day `$5,407.48`, eSavings `$12,452.00`, RRSP `$8,550.00`.
-- `src/app/store/transfer/transfer.effects.ts` — **all transfer validation lives in an effect**,
-  not in the template. Check the order of the `validate()` guards before writing test cases.
-- `src/app/store/ui/ui.reducer.ts` — nav/subnav active tab and dropdown mutual exclusion.
+Inspect the current template and guard order before designing negative cases.
+The amount input is now a text field with `inputmode="decimal"` and a string
+store value; older advice describing a number input's native min/step
+validation does not apply to this implementation.
 
-Resetting state is just a page reload (Ctrl+R) since nothing is persisted.
+Always inspect the displayed input before submitting edge values and check
+the balances afterwards. Differentiate browser-native validation from
+application alerts if future versions reintroduce numeric inputs.
 
-### Validation order gotcha
+## History assertions
 
-`validate()` checks the amount **before** checking that the two accounts differ. So to see
-"Choose two different accounts." you must enter a valid non-zero amount first; otherwise you
-get "Enter an amount greater than $0.00." Read the guard order rather than assuming it.
+Use rendered rows to verify dates are newest first and that, moving from older
+to newer, previous balance plus the newer amount equals the newer balance.
+The newest row's balance should match Current Balance and the account list.
+Verify credits visibly have a plus sign and green text, not merely a CSS class.
+After switching accounts, check there is one history section and the account
+name/number and rows have changed.
 
-## Known/likely pitfalls when testing the amount input
+## Recording and responsive checks
 
-The amount field is a `<input type="number">` with a one-way `[value]="form().amount ?? ''"`
-binding plus an `(input)` handler dispatching to the store. This combination has a real trap:
+Maximize Chrome before recording:
 
-- Typing a leading `-` makes the browser report `value === ''`, which sets the store amount to
-  `null`, which re-renders the input as empty and **wipes the minus sign**. The result is that a
-  typed negative can silently become a positive number and transfer real money with no error.
-  Always screenshot/inspect the field **before** submitting a negative, and check whether balances
-  moved afterwards — do not assume the effect's `amount <= 0` guard was reached.
-- Behaviour differs depending on whether the field was already populated, so test both
-  "type -50 into an empty field" and "select-all then type -50 over an existing value".
-- Native `min="0"` and `step="0.01"` produce **browser tooltips** ("Please enter a valid value…"),
-  not the in-app red alert. A blocked submit may therefore show no NgRx error at all. Distinguish
-  native validation from effect validation when reporting.
-
-## Responsive testing on a VNC box
-
-The browser window has a **minimum width** (~532 real px) that may be wider than the CSS viewport
-you want. Two-step approach:
-
-1. `wmctrl -r :ACTIVE: -e 0,0,0,<width>,<height>` to shrink the window. Note `wmctrl` uses **real**
-   display pixels; check `xrandr` because the computer-use tool's 1024x768 coordinate space is
-   usually scaled from a larger real resolution.
-2. If you still cannot get narrow enough, zoom in with `ctrl+shift+equal` (plain `ctrl+plus` often
-   does **not** register via xdotool) to shrink the CSS viewport further.
-
-Confirm the actual viewport and overflow rather than eyeballing:
-
-```js
-JSON.stringify({vw: document.documentElement.clientWidth,
-                scrollW: document.documentElement.scrollWidth,
-                overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth})
+```bash
+wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz
 ```
 
-Maximize before recording: `wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz`
-(do not use `xdotool key super+Up`, which tiles to half-screen).
+For an exact narrow viewport, open DevTools with F12 and use Ctrl+Shift+M
+for the device toolbar. Select Responsive and enter the desired width
+(e.g. 400). Keep the browser maximized and scroll inside the emulated page.
+Restore normal mode with Ctrl+Shift+M then F12.
+
+If device emulation is unavailable, resize the window with wmctrl and zoom
+in if the browser minimum width prevents the intended CSS width. Confirm the
+actual viewport; physical display pixels and CSS pixels are not equivalent.
+
+Supplement screenshots with read-only geometry checks:
+
+```js
+({
+  viewport: document.documentElement.clientWidth,
+  documentWidth: document.documentElement.scrollWidth,
+  table: document.querySelector('.history__table')?.getBoundingClientRect()
+})
+```
+
+Check the table and its containing section's clientWidth and scrollWidth too.
+DOM text alone is not proof that columns are visible: scroll through the table
+and capture screenshots with all four columns.
 
 ## Devin Secrets Needed
 
-None. The app is fully mocked with no backend or auth.
+None. The app is a local mock with no authentication or backend.

@@ -24,4 +24,30 @@ describe('App', () => {
     expect(compiled.textContent).toContain('RBC Day to Day Banking');
     expect(compiled.textContent).toContain('$17,859.48');
   });
+
+  it('opens account history from the Options menu and dismisses it', async () => {
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('app-account-history')).toBeNull();
+
+    el.querySelector<HTMLButtonElement>('.options__trigger')!.click();
+    await fixture.whenStable();
+
+    const historyItem = Array.from(
+      el.querySelectorAll<HTMLButtonElement>('.options__list button'),
+    ).find((button) => button.textContent?.includes('View Account History'));
+    expect(historyItem).toBeTruthy();
+    historyItem!.click();
+    await fixture.whenStable();
+
+    const history = el.querySelector('app-account-history');
+    expect(history?.textContent).toContain('RBC Day to Day Banking');
+    expect(history?.querySelectorAll('tbody tr').length).toBeGreaterThan(0);
+    expect(el.querySelector('.options__list')).toBeNull();
+
+    history!.querySelector<HTMLButtonElement>('.history__close')!.click();
+    await fixture.whenStable();
+    expect(el.querySelector('app-account-history')).toBeNull();
+  });
 });

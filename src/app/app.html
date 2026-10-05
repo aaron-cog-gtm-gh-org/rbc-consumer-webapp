@@ -7,6 +7,9 @@
     <main class="page__main">
       <app-welcome-bar />
       <app-account-list />
+      @if (historyAccountId()) {
+        <app-account-history />
+      }
       <app-investments-list />
     </main>
 

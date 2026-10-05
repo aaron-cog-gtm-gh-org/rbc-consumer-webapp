@@ -1,5 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import {
+  accountHistoryClosed,
+  accountHistoryRequested,
   accountMenuToggled,
   menusClosed,
   navTabSelected,
@@ -17,6 +19,7 @@ export interface UiState {
   openAccountMenuId: string | null;
   unreadMessages: number;
   searchQuery: string;
+  historyAccountId: string | null;
 }
 
 export const initialUiState: UiState = {
@@ -26,6 +29,7 @@ export const initialUiState: UiState = {
   openAccountMenuId: null,
   unreadMessages: 3,
   searchQuery: '',
+  historyAccountId: null,
 };
 
 export const uiReducer = createReducer(
@@ -35,6 +39,7 @@ export const uiReducer = createReducer(
     activeNavTab: tab,
     userMenuOpen: false,
     openAccountMenuId: null,
+    historyAccountId: null,
   })),
   on(subNavTabSelected, (state, { tab }) => ({ ...state, activeSubNavTab: tab })),
   on(userMenuToggled, (state) => ({
@@ -48,5 +53,12 @@ export const uiReducer = createReducer(
     openAccountMenuId: state.openAccountMenuId === accountId ? null : accountId,
   })),
   on(menusClosed, (state) => ({ ...state, userMenuOpen: false, openAccountMenuId: null })),
+  on(accountHistoryRequested, (state, { accountId }) => ({
+    ...state,
+    userMenuOpen: false,
+    openAccountMenuId: null,
+    historyAccountId: accountId,
+  })),
+  on(accountHistoryClosed, (state) => ({ ...state, historyAccountId: null })),
   on(searchQueryChanged, (state, { query }) => ({ ...state, searchQuery: query })),
 );

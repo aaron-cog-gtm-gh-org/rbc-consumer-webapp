@@ -6,7 +6,7 @@ import {
   selectBankAccounts,
   selectBankAccountsTotal,
 } from '../../store/accounts/accounts.selectors';
-import { accountMenuToggled } from '../../store/ui/ui.actions';
+import { accountHistoryRequested, accountMenuToggled } from '../../store/ui/ui.actions';
 import { selectOpenAccountMenuId } from '../../store/ui/ui.selectors';
 
 @Component({
@@ -18,8 +18,11 @@ import { selectOpenAccountMenuId } from '../../store/ui/ui.selectors';
 export class AccountList {
   private readonly store = inject(Store);
 
+  protected readonly historyMenuItem = 'View Account History';
+
   protected readonly optionsMenuItems = [
     'View Details',
+    this.historyMenuItem,
     'Pay Bills & Transfer Funds',
     'Set Up an Alert',
     'Void Cheque Information',
@@ -37,5 +40,9 @@ export class AccountList {
 
   protected toggleMenu(accountId: string): void {
     this.store.dispatch(accountMenuToggled({ accountId }));
+  }
+
+  protected viewHistory(accountId: string): void {
+    this.store.dispatch(accountHistoryRequested({ accountId }));
   }
 }
