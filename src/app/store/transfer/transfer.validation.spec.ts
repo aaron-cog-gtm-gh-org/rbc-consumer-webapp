@@ -45,6 +45,12 @@ describe('validateTransfer', () => {
     );
   });
 
+  it('rejects an unknown source account', () => {
+    expect(validateTransfer(form('100', { from: 'missing' }), accounts)).toBe(
+      'Choose an account to transfer from.',
+    );
+  });
+
   it('rejects amounts above the source balance', () => {
     expect(validateTransfer(form('999999'), accounts)).toBe(
       'Insufficient funds in the selected account.',
